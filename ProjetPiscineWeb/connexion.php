@@ -41,6 +41,7 @@ session_start();
 						<input type="text" class="form-control" placeholder="username" name="email">
 						
 					</div>
+
 					<!-- icone + password -->
 					<div class="input-group form-group">
 						<!-- prepend place l'icone avant le champ -->
@@ -56,11 +57,12 @@ session_start();
 						<?php
 						if (isset($_POST['soumis'])) 
 						{
-								$mail =isset($_POST["email"])? $_POST["email"] : "";
-								$mdp = isset($_POST["mdp"])? $_POST["mdp"] : "";
-								$database= "projetweb";
-								$db_handle = mysqli_connect('localhost', 'root', '');
-        						$db_found = mysqli_select_db($db_handle, $database);
+								//Requête SQL pour les BDD 
+							$mail =isset($_POST["email"])? $_POST["email"] : "";
+							$mdp = isset($_POST["mdp"])? $_POST["mdp"] : "";
+							$database= "projetweb";
+							$db_handle = mysqli_connect('localhost', 'root', '');
+        					$db_found = mysqli_select_db($db_handle, $database);
 
         					if($db_found)
 							{
@@ -79,23 +81,27 @@ session_start();
 							} 
 							else 
 							{
+								//Boucle permettant de vérifier si l'email entré est un:
 								while ($data = mysqli_fetch_assoc($result)) 
 								{
+
+									//Admin
 									if($data['email']==$mail && $data['password']==$mdp && $data['type']=="Admin")
 									{
 										$_SESSION['email'] = $mail;
 										header('Location: http://127.0.0.1/ProjetPiscineWeb/admin.php');
 										exit();
 									}
+									//Acheteur 
 									if($data['email']==$mail && $data['password']==$mdp && $data['type']=="Acheteur")
 									{
 										$_SESSION['email'] = $mail;
-									
 										header('Location: http://127.0.0.1/ProjetPiscineWeb/menu_principal.php');
 									}
-
+									//Vendeur
 									if($data['email']==$mail && $data['password']==$mdp && $data['type']=="Vendeur")
 									{
+										echo $data['email'];
 										$_SESSION['email'] = $mail;
 										header('Location: http://127.0.0.1/ProjetPiscineWeb/vendeur.php');
 									}

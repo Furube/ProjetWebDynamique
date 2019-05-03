@@ -102,15 +102,12 @@
 					      		echo '<a class="nav-link" disabled="disabled"> <i class="fas fa-shopping-basket fa-3x"></i> </a>';
 		      			}
 		      		}
-		      		echo $_SESSION['email'];
 		      		?>
 		   		   	
 
 					 	<button class="btn btn-outline-success my-2 my-sm-0" >
 					   		<a class="nav-link" href="connexion.php" >  Connexion </a>
  						</button>
-
-
 				  
 		        	
 		    	</form>
