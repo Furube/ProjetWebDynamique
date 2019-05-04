@@ -1,16 +1,22 @@
 <?php
-session_start();
 
-$mail= $_SESSION['email'];
-$database= "projetweb";
-$db_handle = mysqli_connect('localhost', 'root', '');
-$db_found = mysqli_select_db($db_handle, $database);
-
-$sql = "SELECT * FROM `connexion`  WHERE (email =";
-$sqlbis =$sql."'".$mail."')";
-$type = mysqli_query($db_handle, $sqlbis);
+	session_start();
 
 
+	$mail= $_SESSION['email'];
+	$database= "projetweb";
+	$db_handle = mysqli_connect('localhost', 'root', '');
+	$db_found = mysqli_select_db($db_handle, $database);
+
+	$sqlType = array(); 
+	  
+	$sql = 'SELECT * FROM `connexion` WHERE `email` = "'.$mail.'" ' ;  
+
+	if($db_found)
+	{
+		//$result = mysqli_query($db_handle,$sql ); 
+		$type = mysqli_query($db_handle, $sql);
+	}
 
 ?>
 
@@ -27,53 +33,73 @@ $type = mysqli_query($db_handle, $sqlbis);
 	<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
 	<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
 </head>
+
+
 <body>
+	<!-- Création de la barre en haut de l'écran --> 
 	<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-  		<a class="navbar-brand" href="menu_principale.php"> <h2> ECE Amazon </h2> </a> 
+
+  		<a class="navbar-brand" href="menu_principal.php"> <h2> ECE Amazon </h2> </a> 
 		<div class="collapse navbar-collapse" id="main-navigation">
 	
+			<!-- Titre de la page --> 
+			<ul class="navbar-nav">             
+				<li class="nav-item"><a class="nav-link" href=""> <h1> Mon panier </h1></a> </li>       
+			</ul> 
 
-		<ul class="navbar-nav">             
-			<li class="nav-item"><a class="nav-link" href="">Mon panier</a> </li>       
-		</ul>             
-	</div> 
+		</div> 
+
 	</nav>
+
 	<?php
-	$mail="stagiaire@gmail.com";
-	$sql = "SELECT type FROM `connexion`  WHERE (email=";
-	$sql =$sql."'".$mail."')";
-	//$sql="SELECT * FROM `connexion`  WHERE (email = 'stagiaire@gmail.com') ";
-	$type = mysqli_query($db_handle, $sql);
+	//Verification que c'est bien un acheteur.
+	while ($row = mysqli_fetch_array($type, MYSQLI_ASSOC))
+	{
+    	 $sqlType[] = $row['type'];;
+	} 
 	
-	while ($row =mysqli_fetch_assoc($type)) 
-  {
-		
-		if ($row['type']=="Acheteur")
-		{
-				$sql= "SELECT * FROM `panier`  WHERE (email_client = '".$mail."')";
-				echo $sql;
+	//Regarde tout les Client pour voir si l'email correspond
+	for($i=0;$i< count($sqlType) ;$i++) 
+    {   
+    	//Si oui rechercher le panier de 
+		if ($sqlType[$i]=="Client")
+		{	
+			//Récupère tout les panier du client 
+			$sql= 'SELECT * FROM `panier`  WHERE email_client = "'.$mail.'" ';
 				
-				$result5 = mysqli_query($db_handle, $sql);
-				//print_r($result5);
-				//$row1 =mysqli_fetch_assoc($result5);
-				//echo gettype($row1);
-				$tableau = array();
+			$resultPanier = mysqli_query($db_handle, $sql);
+			$panierEmail = array();
 		
-			while($row1= mysqli_fetch_assoc($result5))
+			while($row1= mysqli_fetch_assoc($resultPanier))
 			{
-				$tableau[] = $row1;
-				echo "la";
-				echo $row1['id_commande'];
-				echo"email : ".$row1['email_client']."<br>";
-				echo "id panier :".$row1['id_panier']."<br>";
+				$panierEmail[] = $row1;
 			}
+
+			//Regarder tout les Id de commande pour voir si un correspond
+			//Si elle a un panier rechercher ses articles
+			if ( $emailPanier[0] != null )
+			{
+				//On les cherches dans Bon de commande
+				$sqlBon = 'SELECT * FROM `commande`  WHERE `id_commande` = "'.$emailPanier[0].'" ';
+				$resultCommande = mysqli_query($db_handle, $sqlBon);
+				$CommandeId = array();
+
+				//On a l'ensemble des chemins pour accéder aux items. 
+				while($row2= mysqli_fetch_assoc($resultPanier))
+				{
+					$CommandeId[] = $row2;
+				}
+
+
+			}
+
 				
 		}
 		else if($row['type']!="Acheteur")
 		{
 			echo "<br>Tu n'es pas un client!<br>";
 		}
-  }
+	}
 		
 	?>
 </body>

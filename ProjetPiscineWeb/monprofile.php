@@ -1,13 +1,21 @@
 <?php
 	session_start();
 	$mail= $_SESSION['email'];
+	
 	$database= "projetweb";
 	$db_handle = mysqli_connect('localhost', 'root', '');
 	$db_found = mysqli_select_db($db_handle, $database);
 
-	$sql = "SELECT * FROM `connexion`  WHERE (email =";
-	$sqlbis =$sql."'".$mail."')";
-	$type = mysqli_query($db_handle, $sqlbis);
+	$sqlType = array(); 
+	  
+	$sql = 'SELECT * FROM `connexion` WHERE `email` = "'.$mail.'" ' ;  
+
+	if($db_found)
+	{
+		//$result = mysqli_query($db_handle,$sql ); 
+		$type = mysqli_query($db_handle, $sql);
+	}
+
 ?>
 
 <!DOCTYPE html>
@@ -27,7 +35,7 @@
 
 	<!-- Constitution d'une navbar --> 
 	<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-  		<a class="navbar-brand" href="menu_principale.php"> <h2> ECE Amazon </h2> </a> 
+  		<a class="navbar-brand" href="menu_principal.php"> <h2> ECE Amazon </h2> </a> 
 		<div class="collapse navbar-collapse" id="main-navigation">
 			
 			<!-- Contenu de la navbar --> 
@@ -41,63 +49,65 @@
 
 	<?php 
 	//Récupération et association de tout les email dans un tableau associatif 
-	while ($row = $type->fetch_assoc()) 
+	while ($row = mysqli_fetch_array($type, MYSQLI_ASSOC))
 	{
-    	 $sqlbalbal=$row['type'];
+    	 $sqlType[] = $row['type'];;
 	} 
 
-	//Si l'Utilisateur est un vendeur 
-	if($sqlbalbal=="Vendeur")
-	{
-		//Récupérer les infos du vendeur 
-		$sqltout="SELECT * FROM `".$sqlbalbal."` WHERE (email_vendeur ='".$mail."')";
-		$result2= mysqli_query($db_handle, $sqltout);
-		
-		while ($row = mysqli_fetch_array($result2, MYSQLI_ASSOC))
+	for($i=0;$i< count($sqlType) ;$i++) 
+    {     
+		//Si l'Utilisateur est un vendeur 
+		if($sqlType[$i]=="Vendeur")
 		{
+			//Récupérer les infos du vendeur 
+			$sqltout="SELECT * FROM `".$sqlType."` WHERE (email_vendeur ='".$mail."')";
+			$result2= mysqli_query($db_handle, $sqltout);
 			
-			//Affichage de toutes ses informations
-			echo "<img src= ".$row['photo_vendeur']."width="84" height="84">";
-			echo "<br>email:  ".$row['email_vendeur']."<br>";
-			echo "nom:".$row['nom_vendeur']."<br>";	
-			echo "prenom: ".$row['prenom_vendeur']."<br>"; 
+			while ($row = mysqli_fetch_array($result2, MYSQLI_ASSOC))
+			{
+				
+				//Affichage de toutes ses informations
+				echo '<img src= '.$row['photo_vendeur'].'width="84" height="84"><br>';
+				echo "email:  ".$row['email_vendeur'].						   "<br>";
+				echo "nom:".$row['nom_vendeur'].							   "<br>";	
+				echo "prenom: ".$row['prenom_vendeur'].						   "<br>"; 
+			}
 		}
-	}
 
-	//Si l'Utilisateur est un Admin 
-	if($sqlbalbal=="Admin")
-	{
-		//Récupérer les infos du Admin
-		$sqltout="SELECT * FROM `".$sqlbalbal."` WHERE (email_admin ='".$mail."')";
-		
-		$result2= mysqli_query($db_handle, $sqltout);
-
-		while ($row = mysqli_fetch_array($result2, MYSQLI_ASSOC))
+		//Si l'Utilisateur est un Admin 
+		if($sqlType[$i]=="Admin")
 		{
-			//Affichage de toutes ses informations
-			echo "email:  ".$row['email_admin']."<br>";
-			echo "nom: {$row['nom_admin']}"."<br>";	
+			//Récupérer les infos du Admin
+			$sqltout="SELECT * FROM `".$sqlType."` WHERE (email_admin ='".$mail."')";
+			$result2= mysqli_query($db_handle, $sqltout);
+
+			while ($row = mysqli_fetch_array($result2, MYSQLI_ASSOC))
+			{
+				//Affichage de toutes ses informations
+				echo "email:  ".$row['email_admin'].	"<br>";
+				echo "nom: {$row['nom_admin']}".		"<br>";	
+			}
 		}
-	}
 
-	//Si l'Utilisateur est un Client 
-	if($sqlbalbal=="Client")
-	{
-		//Récupérer les infos du Client
-		$sqltout="SELECT * FROM `".$sqlbalbal."` WHERE (email_client ='".$mail."')";
-		$result2= mysqli_query($db_handle, $sqltout);
-
-		while ($row = mysqli_fetch_array($result2, MYSQLI_ASSOC))
+		//Si l'Utilisateur est un Client 
+		if($sqlType[$i]=="Client")
 		{
-			//Affichage de toutes ses informations
-			echo "email:  ".$row['email_client']."<br>";
-			echo "nom: {$row['nom_client']}"."<br>";
-			echo "prenom: {$row['prenom_client']}"."<br>";
-			echo "adresse postale: {$row['adresse_postale']}"."<br>";
-			echo "code_postale: {$row['code_postale']}"."<br>";
-			echo "ville: {$row['ville']}"."<br>";
-			echo "pays: {$row['pays']}"."<br>";
-			echo "numero_tel: {$row['numero_tel']}"."<br>";
+			//Récupérer les infos du Client
+			$sqltout='SELECT * FROM `'.$sqlType[$i].'` WHERE email_client ="'.$mail.'" ';
+			$result2= mysqli_query($db_handle, $sqltout);
+
+			while ($row = mysqli_fetch_array($result2, MYSQLI_ASSOC))
+			{
+				//Affichage de toutes ses informations
+				echo "email:  ".$row['email_client'].			  "<br>";
+				echo "nom: {$row['nom_client']}".				  "<br>";
+				echo "prenom: {$row['prenom_client']}".			  "<br>";
+				echo "adresse postale: {$row['adresse_postale']}"."<br>";
+				echo "code_postale: {$row['code_postale']}".	  "<br>";
+				echo "ville: {$row['ville']}".					  "<br>";
+				echo "pays: {$row['pays']}".					  "<br>";
+				echo "numero_tel: {$row['numero_tel']}".		  "<br>";
+			}
 		}
 	}
 	

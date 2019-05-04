@@ -93,52 +93,18 @@
 		    	</ul>
 
 		    	
+		    	<!-- Tout ce qui se trouve à droite de la nav bar --> 
 		    	<form class="form-inline my-2 my-lg-0">
 		      
 		      		<input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
 		      		<button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
 		            
-		      		<?php 
+					<a class="nav-link" disabled="disabled"> <i class="fas fa-shopping-basket fa-3x"></i> </a>
+					<button class="btn btn-outline-success my-2 my-sm-0" >
+						<a class="nav-link" href="connexion.php" >  Connexion </a>
+		 			</button> 
 
-		      		$check =false; //Variable qui permet de ne pas passer 2 fois.
-		      		for($i=0;$i< count($tableauClient) ;$i++)
-		      		{
-		      			if ( $_SESSION['email'] == $tableauClient[$i]['email_client'] )
-		      			{
-		      				echo '<a class="nav-link" href="panier2.php"> <i class="fas fa-shopping-basket fa-3x"></i> </a>';
-		      				echo '<div class="btn-group">
-
-						      			<button class="btn btn-outline-success my-2 my-sm-0" >
-									   		<a class="nav-link" href="monprofile.php" >  Mon profil </a>
-				 						</button>
-
-						 				<button class="btn btn-outline-success my-2 my-sm-0" onclick="Disconnect()" >
-											<a class="nav-link" > Disconnect  </a>
-						 				</button>
-
-		      					 </div>'; 
-		      				$check =true; 
-		      			}
-		      			else if ( $check != true )
-		      			{		
-					      		echo '<a class="nav-link" disabled="disabled"> <i class="fas fa-shopping-basket fa-3x"></i> </a>';
-							    echo '<button class="btn btn-outline-success my-2 my-sm-0" >
-							   				<a class="nav-link" href="connexion.php" >  Connexion </a>
-		 							  </button>'; 
-		 						$check =true; 
-		      			}
-		      		}
-		      		?>	
 		    	</form>
 		  	</div>
 
 		</nav>
-		<script>
-		function Disconnect() 
-		{
-			echo "Passage"; 
-  			$_SESSION['email'] = "";
-            header('Location:http://127.0.0.1/ProjetPiscineWeb/menu_principal.php');
-            exit();
-		}
-	</script>

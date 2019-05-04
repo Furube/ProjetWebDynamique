@@ -1,7 +1,9 @@
 <?php session_start();
 isset($_SESSION["email"])? $_SESSION["email"] : "";
-									
 
+//Refresh l'email
+//$_SESSION['email'] = "A"; 						
+echo $_SESSION['email']; 
 ?>
 
 

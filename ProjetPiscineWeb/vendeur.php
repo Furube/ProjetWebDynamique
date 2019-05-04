@@ -103,19 +103,6 @@ else
 	</nav>
 
 
-	<!-------------------------------------------------------------------------------------------------------------------------
-
-	<div>
-		<header class="page-header header container-fluid"> </header> 
-	<script type="text/javascript">      
-		$(document).ready(function()
-						  {           
-			$('.header').height($(window).height());
-		}
-						 ); </script>
-		</div>
-
------------------------------------------------------------------------------------------------------------------------>
 <div class="container">   
 			    <div class="row">
 					<?php 
