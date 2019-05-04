@@ -190,8 +190,6 @@ else
                         echo "Database not found";
                       }
 
-                      //Permet de rediriger la page vers la page admin.php et traitement de la requête SQL 
-                      $result = mysqli_query($db_handle, $sql);
                       header('Location:http://127.0.0.1/ProjetPiscineWeb/vendeur.php');
                       exit();
                    }
